@@ -80,7 +80,6 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 
-
 # CORS_ALLOW_CREDENTIALS = True
 
 # from corsheaders.defaults import default_headers
