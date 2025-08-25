@@ -14,6 +14,10 @@ from dotenv import load_dotenv
 load_dotenv()
 import os
 import sys
+from pathlib import Path
+
+env_file = ".env.prod" if os.getenv("DJANGO_ENV") == "production" else ".env.dev"
+load_dotenv(env_file)
 
 # GDAL Configuration for Conda Environment
 if 'conda' in sys.prefix or 'miniconda' in sys.prefix:
@@ -43,9 +47,8 @@ TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', 'False') == 'True'
-
-ALLOWED_HOSTS = ['*']
+DEBUG = os.getenv("DEBUG", "False") == "True"
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
 
 BASE_URL = os.getenv('BASE_URL')
 # Application definition
@@ -138,30 +141,19 @@ WSGI_APPLICATION = 'kampas_be.wsgi.application'
 #     }
 # }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.contrib.gis.db.backends.postgis',  # Changed to PostGIS
-#         'NAME': os.getenv('DB_NAME'),
-#         'USER': os.getenv('DB_USER'),
-#         'PASSWORD': os.getenv('DB_PASSWORD'),
-#         'HOST': os.getenv('DB_HOST'),
-#         'PORT': os.getenv('DB_PORT'),
-#     }
-# }
-
-
-#Aws Server
-
 DATABASES = {
-    "default": {
-        "ENGINE": "django.contrib.gis.db.backends.postgis",
-        "NAME": "kampas_db_server",
-        "USER": "kampas_user$2025",
-        "PASSWORD": "Iam@Indian$horizontal_user@25082025",
-        "HOST": "localhost",
-        "PORT": "5432",
+    'default': {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',  # Changed to PostGIS
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        "HOST": os.getenv("DB_HOST", "localhost"),
+        "PORT": os.getenv("DB_PORT", "5432"),
     }
 }
+
+
+
 
 
 
