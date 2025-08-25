@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registration Attempt Notification</title>
+</head>
+<body>
+    <p>Hello {{ admin_user.first_name }},</p>
+    <p>Someone tried to register a new account with your organization's domain ({{ attempted_email }}).</p>
+    <p>If you recognize this request, you may want to reach out to them. If not, you can safely ignore this message.</p>
+    <p>Best regards,<br>The Kampas Team</p>
+    <hr>
+    <p style="font-size: 12px; color: #888;">This is an automated message from a no-reply address. Please do not reply to this email.</p>
+</body>
+</html>

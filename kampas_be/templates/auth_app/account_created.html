@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Account Created</title>
+</head>
+<body>
+    <p>Hello {{ user.first_name }},</p>
+    <p>Your account has been created by the admin for {{ user.company.name }}.</p>
+    <p>You can now log in using your email: <b>{{ user.email }}</b></p>
+    <p>If you have any questions, contact your company admin.</p>
+    <p>Thank you!</p>
+</body>
+</html>

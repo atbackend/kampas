@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Account Application Rejected</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #dc3545;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .content {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 0 0 5px 5px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Account Application Rejected</h1>
+    </div>
+    
+    <div class="content">
+        <h2>Hello {{ user.get_full_name }},</h2>
+        
+        <p>We regret to inform you that your account application for Kampas has been rejected by our administrators.</p>
+        
+        <p>This decision was made after careful review of your application. If you believe this was made in error or if you would like to reapply, please contact our support team for assistance.</p>
+        
+        <p><strong>Application details:</strong></p>
+        <ul>
+            <li><strong>Email:</strong> {{ user.email }}</li>
+            <li><strong>Company:</strong> {{ user.company.name }}</li>
+            <li><strong>Application date:</strong> {{ user.created_at|date:"F j, Y" }}</li>
+        </ul>
+        
+        <p>If you have any questions about this decision, please don't hesitate to reach out to our support team.</p>
+        
+        <p>Thank you for your interest in Kampas.<br>The Kampas Team</p>
+    </div>
+    
+    <div class="footer">
+        <p>This is an automated email. Please do not reply to this message.</p>
+    </div>
+</body>
+</html> 
