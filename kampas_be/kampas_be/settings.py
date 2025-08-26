@@ -128,7 +128,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'kampas_be.wsgi.application'
+WSGI_APPLICATION = 'kampas_be.kampas_be.wsgi.application'
 
 
 # Database
@@ -158,7 +158,7 @@ DATABASES = {
 
 
 # Custom User Model - Commented out temporarily to fix migration issue
-AUTH_USER_MODEL = 'auth_app.CustomUser'
+AUTH_USER_MODEL = 'kampas_be.auth_app.CustomUser'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
