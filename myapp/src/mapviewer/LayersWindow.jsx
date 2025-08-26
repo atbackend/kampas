@@ -18,7 +18,7 @@ import {
 } from './ImageUploadSlice';
 import CompactImageUpload from './DragDrop';
 import ProjectSelector from './ProjectSelector';
-import LayerToolbar from './LayerToolBar';
+import LayerToolBar from './LayerToolBar';
 import { fetchProjects } from '../redux+page/Project/ProjectSlice';
 
 
