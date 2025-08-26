@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 
-from auth_app.models import Company
+from kampas_be.auth_app.models import Company
 
 User = get_user_model()
 
