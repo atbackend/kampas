@@ -1,10 +1,9 @@
 import { useEffect, useRef } from "react";
-import StatusBadge from "./StatusBadge";
+import { StatusBadge } from "./StatusBadge";
 import { Button } from "./Button";
-import { Check, CheckCircle, Pencil, X } from "lucide-react";
+import { Check, CheckCircle, Pencil } from "lucide-react";
 import { Toggle } from "./Toggle";
 import { LoadingSpinner } from "./LoadingSpinner";
-import EditableField from "../components/commons/EditableField.js";
 
 // EditableField.jsx
 export const EditableField = ({ 
@@ -83,7 +82,7 @@ export const EditableField = ({
       className="rounded-xl p-6 border transition-all duration-200 hover:border-opacity-80"
       style={{
         backgroundColor: "var(--color-card)",
-        borderColor: isEditing ? "white" : "var(--color-border)" // White border when editing
+        borderColor: isEditing ? "#f0f5fdff" : "var(--color-border)" // Blue border when editing
       }}
     >
       <div className="flex items-center justify-between mb-3">
@@ -94,13 +93,13 @@ export const EditableField = ({
           </label>
           
           {isReadOnly && (
-            <StatusBadge type="readonly">
+            <StatusBadge type="readonly"  className="text-white bg-gray-500 border-gray-500" >
               Read Only
             </StatusBadge>
           )}
           
           {fieldName === 'email' && user?.is_email_verified && (
-            <StatusBadge type="verified" className="text-green-500">
+            <StatusBadge type="verified" className="bg-green-900/30 text-green-500 border border-green-700">
               <CheckCircle size={12} className="text-green-500" />
               Verified
             </StatusBadge>
@@ -113,14 +112,14 @@ export const EditableField = ({
             </StatusBadge>
           )}
         </div>
-        
+
         {!isReadOnly && !isEditing && !isSaving && (
           <Button
             variant="ghost"
             size="sm"
             icon={Pencil}
             onClick={() => onEdit(fieldName)}
-            className="p-2 rounded-lg hover:bg-opacity-10"
+            className="icon-circle"
             style={{ color: "var(--color-muted)" }}
           />
         )}
@@ -136,7 +135,7 @@ export const EditableField = ({
                 className="flex-1 px-3 py-2 bg-transparent border-0 border-b-2 focus:outline-none transition-colors"
                 style={{
                   color: "var(--color-fg)",
-                  borderColor: "white"
+                  borderColor: "#3b82f6"
                 }}
                 autoFocus
               >
@@ -156,44 +155,55 @@ export const EditableField = ({
             ) : (
               <input
                 ref={inputRef}
-                type={fieldName === 'email' ? 'email' : fieldName === 'phone' ? 'tel' : 'text'}
+                type={fieldName === 'email' ? 'email' : fieldName === 'phone' ? 'tel' : fieldName === 'website' ? 'url' : 'text'}
                 value={fieldValue}
                 onChange={(e) => onChange(fieldName, e.target.value)}
                 className="flex-1 px-3 py-2 bg-transparent border-0 border-b-2 focus:outline-none transition-colors"
                 style={{
                   color: "var(--color-fg)",
-                  borderColor: "white"
+                  borderColor: "#3b82f6"
                 }}
-                placeholder={fieldName === 'phone' ? '+1 (555) 123-4567' : `Enter ${label.replace(/_/g, ' ')}`}
+                placeholder={fieldName === 'phone' ? '+1 (555) 123-4567' : fieldName === 'website' ? 'https://your-website.com' : `Enter ${label.replace(/_/g, ' ')}`}
                 autoFocus
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
                     onSave(fieldName);
+                  } else if (e.key === 'Escape') {
+                    onCancel(fieldName);
                   }
                 }}
               />
             )}
             
-            <button
-              onClick={() => onSave(fieldName)}
-              disabled={isSaving || !validation.isValid}
-              className="p-2 rounded-full bg-green-500 hover:bg-green-600 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <Check size={18} />
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => onSave(fieldName)}
+                disabled={isSaving || !validation.isValid}
+                className="p-1 rounded-full border border-green-500 text-green-500 hover:text-white hover:bg-green-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Check size={14} />
+              </button>
+            </div>
           </div>
           
-          {fieldName === 'phone' && validation.message && (
+          {validation.message && (
             <p 
               className="text-xs"
-              style={{ color: validation.isValid ? "var(--color-success)" : "var(--color-error)" }}
+              style={{ color: validation.isValid ? "#10b981" : "#ef4444" }}
             >
               {validation.message}
             </p>
           )}
         </div>
       ) : (
-        <div className={`transition-all duration-200 ${isSaving ? 'opacity-50' : ''}`}>
+        <div 
+          className={`transition-all duration-200 ${isSaving ? 'opacity-50' : ''} cursor-pointer`}
+          onClick={() => {
+            if (!isReadOnly && !isEditing && !isSaving) {
+              onEdit(fieldName);
+            }
+          }}
+        >
           <p style={{ color: "var(--color-fg)" }}>
             {value || 'Not provided'}
           </p>
