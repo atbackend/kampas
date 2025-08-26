@@ -21,7 +21,7 @@ from .serializers import (
     StreetImageUploadSerializer, StreetImageryLayerSerializer, TerrainModelSerializer, TerrainModelUpdateSerializer, TerrainModelCreateSerializer
 )
 from .vector_utils import VectorDataProcessor
-from company_api.models import Client
+from kampas_be.company_api.models import Client
 from django.db.models import Q
 from django.db import transaction
 from django.contrib.gis.geos import GEOSGeometry
@@ -30,13 +30,13 @@ from django.conf import settings
 from django.utils import timezone
 from datetime import timedelta
 from rest_framework.exceptions import PermissionDenied
-from kampas_be.storage_backends import create_project_folder, list_project_files, mark_file_for_deletion
+from kampas_be.kampas_be.storage_backends import create_project_folder, list_project_files, mark_file_for_deletion
 from celery.result import AsyncResult
 
 from .models import Project, RasterGroupTag, RasterLayer
 from .serializers import RasterGroupTagSerializer, RasterLayerSerializer, RasterLayerCreateSerializer
 from .tasks import process_raster_layer, process_vector_layer, process_bulk_file_uploads, process_street_images_upload, process_terrain_layer
-from project_api.file_upload_utils import FileUploadProcessor
+from kampas_be.project_api.file_upload_utils import FileUploadProcessor
 from .street_image_utils import StreetImageProcessor
 
 import logging
