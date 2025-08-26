@@ -49,7 +49,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Project',
             fields=[
-                ('id', models.CharField(default=project_api.models.generate_unique_id, editable=False, max_length=25, primary_key=True, serialize=False)),
+                ('id', models.CharField(default=kampas_be.project_api.models.generate_unique_id, editable=False, max_length=25, primary_key=True, serialize=False)),
                 ('project_name', models.CharField(max_length=200)),
                 ('description', models.TextField(blank=True)),
                 ('quantity', models.DecimalField(blank=True, decimal_places=2, max_digits=10, null=True)),
