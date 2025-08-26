@@ -3,7 +3,7 @@ import string
 import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-from company_api.models import Company
+from kampas_be.company_api.models import Company
 
 def generate_unique_id():
     return ''.join(random.choices(string.ascii_letters + string.digits, k=25))
