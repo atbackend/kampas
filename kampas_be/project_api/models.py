@@ -4,10 +4,10 @@ import uuid
 from django.db import models
 from django.contrib.gis.db import models as gis_models
 from django.contrib.gis.db import models as geomodels
-from company_api.models import Company, Client
-from auth_app.models import CustomUser
-from kampas_be.storage_backends import create_project_folder
-from project_api.geoserver_utils import get_geoserver_manager, GeoServerManager
+from kampas_be.company_api.models import Company, Client
+from kampas_be.auth_app.models import CustomUser
+from kampas_be.kampas_be.storage_backends import create_project_folder
+from kampas_be.project_api.geoserver_utils import get_geoserver_manager, GeoServerManager
 from django.utils import timezone
 from django.conf import settings
 from datetime import timedelta
