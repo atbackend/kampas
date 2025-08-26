@@ -3,7 +3,7 @@ import string
 import logging
 from django.db import models
 from django.conf import settings
-from project_api.geoserver_utils import get_geoserver_manager
+from kampas_be.project_api.geoserver_utils import get_geoserver_manager
 
 logger = logging.getLogger(__name__)
 
