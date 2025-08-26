@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Company',
             fields=[
-                ('id', models.CharField(default=company_api.models.generate_unique_id, editable=False, max_length=25, primary_key=True, serialize=False)),
+                ('id', models.CharField(default=kampas_be.company_api.models.generate_unique_id, editable=False, max_length=25, primary_key=True, serialize=False)),
                 ('company_name', models.CharField(max_length=200)),
                 ('website', models.URLField(blank=True, null=True)),
                 ('licence_type', models.CharField(choices=[('Individual', 'Individual'), ('Proffetional', 'Proffetional'), ('Enterprises', 'Enterprises')], default='Proffetional', max_length=20)),
@@ -42,7 +42,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Client',
             fields=[
-                ('id', models.CharField(default=company_api.models.generate_unique_id, editable=False, max_length=25, primary_key=True, serialize=False)),
+                ('id', models.CharField(default=kampas_be.company_api.models.generate_unique_id, editable=False, max_length=25, primary_key=True, serialize=False)),
                 ('client_type', models.CharField(choices=[('Individual', 'Individual'), ('Business', 'Business'), ('Other', 'Other')], default='Individual', max_length=20)),
                 ('contact_person', models.CharField(blank=True, max_length=100)),
                 ('primary_contact_number', models.CharField(blank=True, max_length=20)),
