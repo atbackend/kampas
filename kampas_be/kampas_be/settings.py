@@ -48,10 +48,9 @@ TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 SECRET_KEY = 'django-insecure-(*+1z^dofk#q-jk8n5g@xu+fvd#pmcl!)pnkphk12s@na+pfqg'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", "False") == "True"
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
-
-BASE_URL = os.getenv('BASE_URL')
+DEBUG = True
+ALLOWED_HOSTS = ["ec2-65-0-97-169.ap-south-1.compute.amazonaws.com", "65.0.97.169", "localhost", "127.0.0.1"]
+BASE_URL = "http://localhost:8000"
 # Application definition
 
 INSTALLED_APPS = [
@@ -144,11 +143,11 @@ WSGI_APPLICATION = 'kampas_be.kampas_be.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',  # Changed to PostGIS
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        "HOST": os.getenv("DB_HOST", "localhost"),
-        "PORT": os.getenv("DB_PORT", "5432"),
+        'NAME': "kampas_db_server",
+        'USER': "kampas_user$2025",
+        'PASSWORD': "Iam@Indian$horizontal_user@25082025",
+        "HOST": "localhost",
+        "PORT": "5432",
     }
 }
 
@@ -183,12 +182,12 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'  # Change this to your email provider
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
+EMAIL_HOST_USER = "backend.dev@ansimap.com"
+EMAIL_HOST_PASSWORD = "fzupfbdolamgskcs"
+DEFAULT_FROM_EMAIL = "no-reply@ansimap.com"
 
 # Frontend URL for email verification
-FRONTEND_URL = os.getenv('FRONTEND_URL')
+FRONTEND_URL = "http://localhost:3000"
 
 # REST Framework Configuration
 REST_FRAMEWORK = {
@@ -248,10 +247,10 @@ PROJECT_DATA_LOCATION = 'project_data'
 USE_S3 = True # Convert string to boolean
 
 if USE_S3:
-    AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
-    AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-    AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
-    AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME', 'ap-south-1')
+    AWS_ACCESS_KEY_ID = "AKIA34AMDFQMHAFAPI3A"
+    AWS_SECRET_ACCESS_KEY = "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"
+    AWS_STORAGE_BUCKET_NAME = "kampas"
+    AWS_S3_REGION_NAME = "ap-south-1"
     AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
     AWS_DEFAULT_ACL = 'private'
     AWS_S3_OBJECT_PARAMETERS = {
@@ -276,10 +275,10 @@ else:
 
 
 # GeoServer Configuration
-GEOSERVER_URL = os.getenv('GEOSERVER_URL', 'http://192.168.29.247:8080/geoserver')
-GEOSERVER_USERNAME = os.getenv('GEOSERVER_USERNAME', 'admin')
-GEOSERVER_PASSWORD = os.getenv('GEOSERVER_PASSWORD', 'geoserver')
-GEOSERVER_WORKSPACE = os.getenv('GEOSERVER_WORKSPACE', 'kampas_workspace')
+GEOSERVER_URL = "http://localhost:8080/geoserver"
+GEOSERVER_USERNAME = "darkhelium$2025"
+GEOSERVER_PASSWORD = "Darkhelium@25082025$Indian#Aiagent"
+GEOSERVER_WORKSPACE = "kampas_workspace_server"
 
 
 # # Logging configuration
@@ -359,8 +358,8 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Celery Configuration
-CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', 'redis://localhost:6379/0')
-CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND', 'redis://localhost:6379/0')
+CELERY_BROKER_URL = "redis://localhost:6379/0"
+CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
