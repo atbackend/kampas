@@ -14,7 +14,7 @@ from pytz import timezone as pytz_timezone
 import boto3
 from django.conf import settings
 from django.db import connection
-from project_api.geoserver_utils import GeoServerManager, StreetImageryLayerManager
+from kampas_be.project_api.geoserver_utils import GeoServerManager, StreetImageryLayerManager
 from .models import StreetImage
 
 logger = logging.getLogger(__name__)
