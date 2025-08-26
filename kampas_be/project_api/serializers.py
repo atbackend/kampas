@@ -1,10 +1,10 @@
 from rest_framework import serializers
 from rest_framework_gis.serializers import GeoFeatureModelSerializer, GeoFeatureModelSerializer
 from .models import Project, GroupType, GroupTag, CoordinateReferenceSystem, VectorLayer, VectorFeature, RasterGroupTag, RasterLayer, StreetImage, TerrainModel
-from company_api.models import Client, Company  
-from auth_app.models import CustomUser
-from company_api.serializers import ClientSerializer
-from project_api.vector_utils import VectorDataProcessor
+from kampas_be.company_api.models import Client, Company  
+from kampas_be.auth_app.models import CustomUser
+from kampas_be.company_api.serializers import ClientSerializer
+from kampas_be.project_api.vector_utils import VectorDataProcessor
 
 # -----------------------------------------------------------------------------
 # ProjectSerializer handles serialization and validation for the Project model.
