@@ -10,7 +10,7 @@ import { Grid } from '../components/commons/Grid.jsx';
 import { LoadingSpinner } from '../components/commons/LoadingSpinner.jsx';
 import { Button } from '../components/commons/Button.jsx';
 import { ErrorMessage } from '../components/commons/ErrorMessage.jsx';
-import { EditableField } from '../components/commons/EditableField.jsx';
+import { EditableField } from '../components/commons/EditablefIeld.jsx';
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
