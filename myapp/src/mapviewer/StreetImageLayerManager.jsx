@@ -668,7 +668,7 @@ export class StreetImageLayerManager {
     return {
       cachedImages: this.imageCache.size,
       loadingImages: this.loadingPromises.size,
-      failedUrls: this.failedUrls.size,
+      failedUrlCount: this.failedUrls.size,
       cacheKeys: Array.from(this.imageCache.keys()),
       failedUrls: Array.from(this.failedUrls)
     };
