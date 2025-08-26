@@ -16,11 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from auth_app.token_views import CustomTokenObtainPairView, CustomTokenRefreshView
+from kampas_be.auth_app.token_views import CustomTokenObtainPairView, CustomTokenRefreshView
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-from project_api.views import TaskStatusAPIView, UploadTaskStatusAPIView
+from kampas_be.project_api.views import TaskStatusAPIView, UploadTaskStatusAPIView
 
 
 
