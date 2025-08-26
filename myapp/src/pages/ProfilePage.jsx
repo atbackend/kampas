@@ -1,33 +1,35 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserProfile, updateUserProfile, clearError } from '../redux/authSlice';
-import { Pencil, User, Mail, Phone, Building, Shield, CheckCircle, XCircle,Check,X } from 'lucide-react';
+import {
+  User, Mail, Phone, Building, Shield, CheckCircle, XCircle,
+  Check, X, Settings, Briefcase, UserCheck, Crown, Activity
+} from 'lucide-react';
 
 import { PageLayout } from '../components/commons/PageLayout.jsx';
 import { PageHeader } from '../components/commons/PageHeader.jsx';
-import { Card } from '../components/commons/Card.jsx';
-import { Grid } from '../components/commons/Grid.jsx';
 import { LoadingSpinner } from '../components/commons/LoadingSpinner.jsx';
 import { Button } from '../components/commons/Button.jsx';
 import { ErrorMessage } from '../components/commons/ErrorMessage.jsx';
 import { EditableField } from '../components/commons/EditablefIeld.jsx';
+import { useToast } from '../components/commons/SuccessMessages.jsx';
+
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
-  const { user, companyUsers, loading, error } = useSelector((state) => state.auth);
+  const { user, loading, error } = useSelector((state) => state.auth);
   const [editingField, setEditingField] = useState(null);
   const [fieldValues, setFieldValues] = useState({});
   const [phoneValidation, setPhoneValidation] = useState({ isValid: true, message: '' });
   const [savingField, setSavingField] = useState(null);
+  const { addToast } = useToast();
 
-  // Fetch user profile on component mount
   useEffect(() => {
     if (!user) {
       dispatch(fetchUserProfile());
     }
   }, [dispatch, user]);
 
-  // Initialize field values when user data changes
   useEffect(() => {
     if (user) {
       setFieldValues({
@@ -40,7 +42,6 @@ const ProfilePage = () => {
     }
   }, [user]);
 
-  // Role options for select dropdown (cannot be degraded)
   const roleOptions = [
     { value: 'admin', label: 'Admin' },
     { value: 'manager', label: 'Manager' },
@@ -48,24 +49,21 @@ const ProfilePage = () => {
     { value: 'viewer', label: 'Viewer' }
   ];
 
-  // Get role hierarchy for validation
   const getRoleHierarchy = (role) => {
     const hierarchy = { admin: 4, manager: 3, employee: 2, viewer: 1 };
     return hierarchy[role] || 0;
   };
 
-  // Filter role options to prevent degradation
   const getAvailableRoles = () => {
     const currentRoleLevel = getRoleHierarchy(user?.role);
     return roleOptions.filter(option => getRoleHierarchy(option.value) >= currentRoleLevel);
   };
 
-  // Phone validation with country code detection
   const validatePhone = (phone) => {
     if (!phone) return { isValid: true, message: '' };
-    
+   
     const digitsOnly = phone.replace(/\D/g, '');
-    
+   
     if (digitsOnly.startsWith('1') && digitsOnly.length === 11) {
       return { isValid: true, message: 'Valid US/Canada number' };
     } else if (digitsOnly.startsWith('91') && digitsOnly.length === 12) {
@@ -79,64 +77,45 @@ const ProfilePage = () => {
     }
   };
 
-  // Format phone number display
   const formatPhoneDisplay = (phone) => {
     if (!phone) return '';
     const digitsOnly = phone.replace(/\D/g, '');
-    
+   
     if (digitsOnly.startsWith('1') && digitsOnly.length === 11) {
-      return `+1 (${digitsOnly.slice(1, 4)}) ${digitsOnly.slice(4, 7)}-${digitsOnly.slice(7)}`;
+      return +1 (${digitsOnly.slice(1, 4)}) ${digitsOnly.slice(4, 7)}-${digitsOnly.slice(7)};
     } else if (digitsOnly.startsWith('91') && digitsOnly.length === 12) {
-      return `+91 ${digitsOnly.slice(2, 7)}-${digitsOnly.slice(7)}`;
+      return +91 ${digitsOnly.slice(2, 7)}-${digitsOnly.slice(7)};
     }
     return phone;
   };
 
-  // Field icons mapping
-  const fieldIcons = {
-    first_name: User,
-    last_name: User,
-    email: Mail,
-    phone: Phone,
-    role: Shield,
-    company_name: Building,
-    is_email_verified: CheckCircle,
-    is_approved: CheckCircle,
-    registered_admin: Shield,
-    primary_admin: Shield,
-    is_active: CheckCircle
-  };
-
-  // Handle field edit start
   const handleEditStart = (fieldName) => {
     setEditingField(fieldName);
     dispatch(clearError());
   };
 
-  // Handle field value change
   const handleFieldChange = (fieldName, value) => {
     setFieldValues(prev => ({ ...prev, [fieldName]: value }));
-    
+   
     if (fieldName === 'phone') {
       setPhoneValidation(validatePhone(value));
     }
   };
 
-  // Handle field save
   const handleFieldSave = async (fieldName) => {
     const value = fieldValues[fieldName];
-    
-    // Validate phone before saving
+   
     if (fieldName === 'phone') {
       const validation = validatePhone(value);
       if (!validation.isValid) {
         setPhoneValidation(validation);
+        addToast('Please enter a valid phone number', 'error');
         return;
       }
     }
 
-    // Validate required fields
     if (['first_name', 'last_name'].includes(fieldName) && !value.trim()) {
+      addToast(${fieldName.replace('_', ' ')} is required, 'error');
       return;
     }
 
@@ -144,34 +123,34 @@ const ProfilePage = () => {
 
     try {
       const updateData = { [fieldName]: value };
-      
       const resultAction = await dispatch(updateUserProfile(updateData));
-      
+     
       if (updateUserProfile.fulfilled.match(resultAction)) {
         const updatedUser = { ...user, [fieldName]: value };
         localStorage.setItem('user', JSON.stringify(updatedUser));
-        
+       
         await dispatch(fetchUserProfile());
         setEditingField(null);
-        
+       
         if (fieldName === 'phone') {
           setPhoneValidation({ isValid: true, message: '' });
         }
+       
+        addToast(${fieldName.replace('_', ' ')} updated successfully!, 'success');
       } else {
-        console.error('Update failed:', resultAction.payload);
+        addToast('Failed to update field. Please try again.', 'error');
       }
     } catch (err) {
-      console.error('Update failed:', err);
+      addToast('An error occurred while updating. Please try again.', 'error');
     } finally {
       setSavingField(null);
     }
   };
 
-  // Handle field cancel
   const handleFieldCancel = (fieldName) => {
-    setFieldValues(prev => ({ 
-      ...prev, 
-      [fieldName]: user[fieldName] || '' 
+    setFieldValues(prev => ({
+      ...prev,
+      [fieldName]: user[fieldName] || ''
     }));
     setEditingField(null);
     if (fieldName === 'phone') {
@@ -180,204 +159,332 @@ const ProfilePage = () => {
     dispatch(clearError());
   };
 
-  // Handle toggle fields
   const handleToggle = async (fieldName) => {
     const newValue = !fieldValues[fieldName];
     setFieldValues(prev => ({ ...prev, [fieldName]: newValue }));
     setSavingField(fieldName);
-    
+   
     try {
       const updateData = { [fieldName]: newValue };
-      
       const resultAction = await dispatch(updateUserProfile(updateData));
-      
+     
       if (updateUserProfile.fulfilled.match(resultAction)) {
         const updatedUser = { ...user, [fieldName]: newValue };
         localStorage.setItem('user', JSON.stringify(updatedUser));
-        
+       
         await dispatch(fetchUserProfile());
+        addToast(Account ${newValue ? 'activated' : 'deactivated'} successfully!, 'success');
       } else {
         setFieldValues(prev => ({ ...prev, [fieldName]: !newValue }));
+        addToast('Failed to update status. Please try again.', 'error');
       }
     } catch (err) {
-      console.error('Toggle update failed:', err);
       setFieldValues(prev => ({ ...prev, [fieldName]: !newValue }));
+      addToast('An error occurred while updating status. Please try again.', 'error');
     } finally {
       setSavingField(null);
     }
   };
 
-  // Loading state
   if (loading && !user) {
     return (
-      <PageLayout>
-        <div className="flex items-center justify-center min-h-[50vh]">
-          <div className="text-center">
-            <LoadingSpinner size="lg" className="mx-auto mb-4" />
-            <p style={{ color: "var(--color-muted)" }} className="text-lg">Loading profile...</p>
-          </div>
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ backgroundColor: "var(--color-bg)" }}
+      >
+        <div className="text-center">
+          <LoadingSpinner size="lg" className="mx-auto mb-4" />
+          <p style={{ color: "var(--color-muted)" }} className="text-lg">Loading profile...</p>
         </div>
-      </PageLayout>
+      </div>
     );
   }
 
-  // User not found state
   if (!loading && !user) {
     return (
-      <PageLayout>
-        <div className="flex items-center justify-center min-h-[50vh]">
-          <div className="text-center">
-            <XCircle size={48} className="mx-auto mb-4" style={{ color: "var(--color-error)" }} />
-            <p style={{ color: "var(--color-muted)" }} className="text-lg">User not found</p>
-            <Button 
-              onClick={() => dispatch(fetchUserProfile())}
-              className="mt-4"
-            >
-              Retry
-            </Button>
-          </div>
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ backgroundColor: "var(--color-bg)" }}
+      >
+        <div className="text-center">
+          <XCircle size={48} className="mx-auto mb-4" style={{ color: "var(--color-error)" }} />
+          <p style={{ color: "var(--color-muted)" }} className="text-lg">User not found</p>
+          <Button onClick={() => dispatch(fetchUserProfile())} className="mt-4">
+            Retry
+          </Button>
         </div>
-      </PageLayout>
+      </div>
     );
   }
 
   return (
-    <PageLayout>
-      <PageHeader
-        title="Profile"
-        subtitle="Manage your account information"
-        icon={User}
-      />
+    <div
+      className="min-h-screen"
+      style={{ backgroundColor: "var(--color-bg)" }}
+    >
+   
+   {/* Header */}
+      <div
+        className="border-b sticky top-0 z-10 backdrop-blur-sm"
+        style={{
+          backgroundColor: "var(--color-bg)",
+          borderColor: "var(--color-bg)"
+        }}
+      >
+        <div className="max-w-6xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+             <div className="p-4 bg-slate-800 border border-slate-700 rounded-xl shadow-lg">
+                    <User className="h-8 w-8 text-blue-400" />
+                  </div>
+              <div>
+                <h1
+                  className="text-4xl font-bold"
+                  style={{ color: "var(--color-fg)" }}
+                >
+                  Profile Settings
+                </h1>
+                <p
+                  className="text-sm"
+                  style={{ color: "var(--color-muted)" }}
+                >
+                  Manage your account information and preferences
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-      {error && <ErrorMessage message={error} className="mb-8" />}
 
-    
-        <Grid cols="grid-cols-1 md:grid-cols-2 xl:grid-cols-3" gap="gap-6">
-          {/* Editable Fields */}
-          <EditableField
-            fieldName="first_name"
-            label="First Name"
-            value={user.first_name}
-            isEditing={editingField === 'first_name'}
-            isSaving={savingField === 'first_name'}
-            fieldValue={fieldValues.first_name !== undefined ? fieldValues.first_name : user.first_name}
-            onEdit={handleEditStart}
-            onChange={handleFieldChange}
-            onSave={handleFieldSave}
-            onCancel={handleFieldCancel}
-            icon={fieldIcons.first_name}
-            user={user}
-          />
+      {/* Main Content */}
+      <div className="max-w-6xl mx-auto px-6 py-8">
+        <div className="space-y-8">
+          {/* Personal Information Section */}
+          <div
+            className="rounded-2xl border p-8"
+            style={{
+              backgroundColor: "var(--color-card)",
+              borderColor: "var(--color-border)"
+            }}
+          >
+            <div className="flex items-center gap-3 mb-8">
+              <div
+                className="p-2 rounded-lg"
+                style={{ backgroundColor: "var(--color-primary-bg)" }}
+              >
+                <User size={20} style={{ color: "var(--color-primary)" }} />
+              </div>
+              <div>
+                <h2
+                  className="text-xl font-semibold"
+                  style={{ color: "var(--color-fg)" }}
+                >
+                  Personal Information
+                </h2>
+                <p
+                  className="text-sm"
+                  style={{ color: "var(--color-muted)" }}
+                >
+                  Your basic profile details
+                </p>
+              </div>
+            </div>
 
-          <EditableField
-            fieldName="last_name"
-            label="Last Name"
-            value={user.last_name}
-            isEditing={editingField === 'last_name'}
-            isSaving={savingField === 'last_name'}
-            fieldValue={fieldValues.last_name !== undefined ? fieldValues.last_name : user.last_name}
-            onEdit={handleEditStart}
-            onChange={handleFieldChange}
-            onSave={handleFieldSave}
-            onCancel={handleFieldCancel}
-            icon={fieldIcons.last_name}
-            user={user}
-          />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <EditableField
+                fieldName="first_name"
+                label="First Name"
+                value={user.first_name}
+                isEditing={editingField === 'first_name'}
+                isSaving={savingField === 'first_name'}
+                fieldValue={fieldValues.first_name !== undefined ? fieldValues.first_name : user.first_name}
+                onEdit={handleEditStart}
+                onChange={handleFieldChange}
+                onSave={handleFieldSave}
+                onCancel={handleFieldCancel}
+                icon={User}
+                user={user}
+       
+              />
 
-          <EditableField
-            fieldName="phone"
-            label="Phone Number"
-            value={formatPhoneDisplay(user.phone)}
-            isEditing={editingField === 'phone'}
-            isSaving={savingField === 'phone'}
-            fieldValue={fieldValues.phone !== undefined ? fieldValues.phone : user.phone}
-            validation={phoneValidation}
-            onEdit={handleEditStart}
-            onChange={handleFieldChange}
-            onSave={handleFieldSave}
-            onCancel={handleFieldCancel}
-            icon={fieldIcons.phone}
-            user={user}
-          />
+              <EditableField
+                fieldName="last_name"
+                label="Last Name"
+                value={user.last_name}
+                isEditing={editingField === 'last_name'}
+                isSaving={savingField === 'last_name'}
+                fieldValue={fieldValues.last_name !== undefined ? fieldValues.last_name : user.last_name}
+                onEdit={handleEditStart}
+                onChange={handleFieldChange}
+                onSave={handleFieldSave}
+                onCancel={handleFieldCancel}
+                icon={User}
+                user={user}
+              />
 
-          <EditableField
-            fieldName="role"
-            label="Role"
-            value={user.role}
-            isSelect={true}
-            options={getAvailableRoles()}
-            isEditing={editingField === 'role'}
-            isSaving={savingField === 'role'}
-            fieldValue={fieldValues.role !== undefined ? fieldValues.role : user.role}
-            onEdit={handleEditStart}
-            onChange={handleFieldChange}
-            onSave={handleFieldSave}
-            onCancel={handleFieldCancel}
-            icon={fieldIcons.role}
-            user={user}
-          />
+              <EditableField
+                fieldName="email"
+                label="Email Address"
+                value={user.email}
+                isReadOnly={true}
+                icon={Mail}
+                user={user}
+              />
 
-          {/* Read-only Fields */}
-          <EditableField
-            fieldName="email"
-            label="Email Address"
-            value={user.email}
-            isReadOnly={true}
-            icon={fieldIcons.email}
-            user={user}
-          />
+              <EditableField
+                fieldName="phone"
+                label="Phone Number"
+                value={formatPhoneDisplay(user.phone)}
+                isEditing={editingField === 'phone'}
+                isSaving={savingField === 'phone'}
+                fieldValue={fieldValues.phone !== undefined ? fieldValues.phone : user.phone}
+                validation={phoneValidation}
+                onEdit={handleEditStart}
+                onChange={handleFieldChange}
+                onSave={handleFieldSave}
+                onCancel={handleFieldCancel}
+                icon={Phone}
+                user={user}
+              />
+            </div>
+          </div>
 
-          <EditableField
-            fieldName="company_name"
-            label="Company Name"
-            value={user.company?.company_name}
-            isReadOnly={true}
-            icon={fieldIcons.company_name}
-            user={user}
-          />
+          {/* Account Settings Section */}
+          <div
+            className="rounded-2xl border p-8"
+            style={{
+              backgroundColor: "var(--color-card)",
+              borderColor: "var(--color-border)"
+            }}
+          >
+            <div className="flex items-center gap-3 mb-8">
+              <div
+                className="p-2 rounded-lg"
+                style={{ backgroundColor: "var(--color-primary-bg)" }}
+              >
+                <Settings size={20} style={{ color: "var(--color-primary)" }} />
+              </div>
+              <div>
+                <h2
+                  className="text-xl font-semibold"
+                  style={{ color: "var(--color-fg)" }}
+                >
+                  Account Settings
+                </h2>
+                <p
+                  className="text-sm"
+                  style={{ color: "var(--color-muted)" }}
+                >
+                  Role and account status configuration
+                </p>
+              </div>
+            </div>
 
-          <EditableField
-            fieldName="is_approved"
-            label="Account Approved"
-            value={user.is_approved ? 'Yes' : 'No'}
-            isReadOnly={true}
-            icon={fieldIcons.is_approved}
-            user={user}
-          />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <EditableField
+                fieldName="role"
+                label="Role"
+                value={user.role}
+                isSelect={true}
+                options={getAvailableRoles()}
+                isEditing={editingField === 'role'}
+                isSaving={savingField === 'role'}
+                fieldValue={fieldValues.role !== undefined ? fieldValues.role : user.role}
+                onEdit={handleEditStart}
+                onChange={handleFieldChange}
+                onSave={handleFieldSave}
+                onCancel={handleFieldCancel}
+                icon={Shield}
+                user={user}
+              />
 
-          <EditableField
-            fieldName="registered_admin"
-            label="Registered Admin"
-            value={user.registered_admin ? 'Yes' : 'No'}
-            isReadOnly={true}
-            icon={fieldIcons.registered_admin}
-            user={user}
-          />
+              <EditableField
+                fieldName="is_active"
+                label="Account Status"
+                value={user.is_active}
+                isToggle={true}
+                isSaving={savingField === 'is_active'}
+                fieldValue={fieldValues.is_active !== undefined ? fieldValues.is_active : user.is_active}
+                onToggle={handleToggle}
+                icon={Activity}
+                user={user}
+              />
+            </div>
+          </div>
 
-          <EditableField
-            fieldName="primary_admin"
-            label="Primary Admin"
-            value={user.primary_admin ? 'Yes' : 'No'}
-            isReadOnly={true}
-            icon={fieldIcons.primary_admin}
-            user={user}
-          />
+          {/* Company Information Section */}
+          <div
+            className="rounded-2xl border p-8"
+            style={{
+              backgroundColor: "var(--color-card)",
+              borderColor: "var(--color-border)"
+            }}
+          >
+            <div className="flex items-center gap-3 mb-8">
+              <div
+                className="p-2 rounded-lg"
+                style={{ backgroundColor: "var(--color-primary-bg)" }}
+              >
+                <Briefcase size={20} style={{ color: "var(--color-primary)" }} />
+              </div>
+              <div>
+                <h2
+                  className="text-xl font-semibold"
+                  style={{ color: "var(--color-fg)" }}
+                >
+                  Company Information
+                </h2>
+                <p
+                  className="text-sm"
+                  style={{ color: "var(--color-muted)" }}
+                >
+                  Organization details and permissions
+                </p>
+              </div>
+            </div>
 
-          {/* Toggle Field */}
-          <EditableField
-            fieldName="is_active"
-            label="Account Status"
-            value={user.is_active}
-            isToggle={true}
-            isSaving={savingField === 'is_active'}
-            fieldValue={fieldValues.is_active !== undefined ? fieldValues.is_active : user.is_active}
-            onToggle={handleToggle}
-            icon={fieldIcons.is_active}
-            user={user}
-          />
-        </Grid>
-    
-    </PageLayout>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <EditableField
+                fieldName="company_name"
+                label="Company Name"
+                value={user.company?.company_name}
+                isReadOnly={true}
+                icon={Building}
+                user={user}
+              />
+
+              <EditableField
+                fieldName="is_approved"
+                label="Account Approved"
+                value={user.is_approved ? 'Yes' : 'No'}
+                isReadOnly={true}
+                icon={UserCheck}
+                user={user}
+              />
+
+              <EditableField
+                fieldName="registered_admin"
+                label="Registered Admin"
+                value={user.registered_admin ? 'Yes' : 'No'}
+                isReadOnly={true}
+                icon={Shield}
+                user={user}
+              />
+
+              <EditableField
+                fieldName="primary_admin"
+                label="Primary Admin"
+                value={user.primary_admin ? 'Yes' : 'No'}
+                isReadOnly={true}
+                icon={Crown}
+                user={user}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
