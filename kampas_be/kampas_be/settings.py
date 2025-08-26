@@ -16,8 +16,15 @@ import os
 import sys
 from pathlib import Path
 
-env_file = ".env.prod" if os.getenv("DJANGO_ENV") == "production" else ".env.dev"
-load_dotenv(env_file)
+# Decide which env file to load based on DJANGO_ENV
+DJANGO_ENV = os.getenv("DJANGO_ENV", "development")
+
+if DJANGO_ENV == "production":
+    load_dotenv(BASE_DIR / ".env.prod")
+elif DJANGO_ENV == "development":
+    load_dotenv(BASE_DIR / ".env.dev")
+else:
+    load_dotenv(BASE_DIR / ".env")  # fallback
 
 # GDAL Configuration for Conda Environment
 if 'conda' in sys.prefix or 'miniconda' in sys.prefix:
