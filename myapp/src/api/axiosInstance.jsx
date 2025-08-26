@@ -7,7 +7,7 @@ import { isTokenExpired } from '../utils/tokenUtils';
 const API_URL = "http://localhost:8000";
 
 const axiosInstance = axios.create({
-  baseURL: API_URL,
+  baseURL: '',
   headers: {
     'Content-Type': 'application/json',
   },
