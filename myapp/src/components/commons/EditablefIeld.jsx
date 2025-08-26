@@ -4,6 +4,7 @@ import { Button } from "./Button";
 import { Check, CheckCircle, Pencil, X } from "lucide-react";
 import { Toggle } from "./Toggle";
 import { LoadingSpinner } from "./LoadingSpinner";
+import EditableField from "../components/commons/EditableField.js";
 
 // EditableField.jsx
 export const EditableField = ({ 
