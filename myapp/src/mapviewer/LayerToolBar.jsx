@@ -14,7 +14,6 @@ import {
 
 
 } from 'lucide-react';
-import LayerToolbar from "./LayerToolbar";
 
 export const LayerToolbar = () => {
   const [activeView, setActiveView] = useState('layers');
