@@ -110,7 +110,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'kampas_be.urls'
+ROOT_URLCONF = 'kampas_be.kampas_be.urls'
 
 TEMPLATES = [
     {
