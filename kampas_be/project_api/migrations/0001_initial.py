@@ -2,7 +2,7 @@
 
 import django.contrib.gis.db.models.fields
 import django.db.models.deletion
-import project_api.models
+import kampas_be.project_api.models
 import uuid
 from django.conf import settings
 from django.db import migrations, models
