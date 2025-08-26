@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from company_api.models import Company, Client
+from kampas_be.company_api.models import Company, Client
 
 
 @admin.register(Company)
