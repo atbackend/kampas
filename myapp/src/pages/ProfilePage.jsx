@@ -1,18 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserProfile, updateUserProfile, clearError } from '../redux/authSlice';
-import {
-  User, Mail, Phone, Building, Shield, CheckCircle, XCircle,
-  Check, X, Settings, Briefcase, UserCheck, Crown, Activity
+import { 
+  User, Mail, Phone, Building, Shield, CheckCircle, XCircle, 
+  Check, X, Settings, Briefcase, UserCheck, Crown, Activity 
 } from 'lucide-react';
 
-import { PageLayout } from '../components/commons/PageLayout.jsx';
-import { PageHeader } from '../components/commons/PageHeader.jsx';
 import { LoadingSpinner } from '../components/commons/LoadingSpinner.jsx';
 import { Button } from '../components/commons/Button.jsx';
 import { ErrorMessage } from '../components/commons/ErrorMessage.jsx';
 import { EditableField } from '../components/commons/EditablefIeld.jsx';
 import { useToast } from '../components/commons/SuccessMessages.jsx';
+import { PageHeader } from './PageHeader.jsx';
 
 
 const ProfilePage = () => {
@@ -61,9 +60,9 @@ const ProfilePage = () => {
 
   const validatePhone = (phone) => {
     if (!phone) return { isValid: true, message: '' };
-   
+    
     const digitsOnly = phone.replace(/\D/g, '');
-   
+    
     if (digitsOnly.startsWith('1') && digitsOnly.length === 11) {
       return { isValid: true, message: 'Valid US/Canada number' };
     } else if (digitsOnly.startsWith('91') && digitsOnly.length === 12) {
@@ -80,11 +79,11 @@ const ProfilePage = () => {
   const formatPhoneDisplay = (phone) => {
     if (!phone) return '';
     const digitsOnly = phone.replace(/\D/g, '');
-   
+    
     if (digitsOnly.startsWith('1') && digitsOnly.length === 11) {
-      return +1 (${digitsOnly.slice(1, 4)}) ${digitsOnly.slice(4, 7)}-${digitsOnly.slice(7)};
+      return `+1 (${digitsOnly.slice(1, 4)}) ${digitsOnly.slice(4, 7)}-${digitsOnly.slice(7)}`;
     } else if (digitsOnly.startsWith('91') && digitsOnly.length === 12) {
-      return +91 ${digitsOnly.slice(2, 7)}-${digitsOnly.slice(7)};
+      return `+91 ${digitsOnly.slice(2, 7)}-${digitsOnly.slice(7)}`;
     }
     return phone;
   };
@@ -96,7 +95,7 @@ const ProfilePage = () => {
 
   const handleFieldChange = (fieldName, value) => {
     setFieldValues(prev => ({ ...prev, [fieldName]: value }));
-   
+    
     if (fieldName === 'phone') {
       setPhoneValidation(validatePhone(value));
     }
@@ -104,7 +103,7 @@ const ProfilePage = () => {
 
   const handleFieldSave = async (fieldName) => {
     const value = fieldValues[fieldName];
-   
+    
     if (fieldName === 'phone') {
       const validation = validatePhone(value);
       if (!validation.isValid) {
@@ -115,7 +114,7 @@ const ProfilePage = () => {
     }
 
     if (['first_name', 'last_name'].includes(fieldName) && !value.trim()) {
-      addToast(${fieldName.replace('_', ' ')} is required, 'error');
+      addToast(`${fieldName.replace('_', ' ')} is required`, 'error');
       return;
     }
 
@@ -124,19 +123,19 @@ const ProfilePage = () => {
     try {
       const updateData = { [fieldName]: value };
       const resultAction = await dispatch(updateUserProfile(updateData));
-     
+      
       if (updateUserProfile.fulfilled.match(resultAction)) {
         const updatedUser = { ...user, [fieldName]: value };
         localStorage.setItem('user', JSON.stringify(updatedUser));
-       
+        
         await dispatch(fetchUserProfile());
         setEditingField(null);
-       
+        
         if (fieldName === 'phone') {
           setPhoneValidation({ isValid: true, message: '' });
         }
-       
-        addToast(${fieldName.replace('_', ' ')} updated successfully!, 'success');
+        
+        addToast(`${fieldName.replace('_', ' ')} updated successfully!`, 'success');
       } else {
         addToast('Failed to update field. Please try again.', 'error');
       }
@@ -148,9 +147,9 @@ const ProfilePage = () => {
   };
 
   const handleFieldCancel = (fieldName) => {
-    setFieldValues(prev => ({
-      ...prev,
-      [fieldName]: user[fieldName] || ''
+    setFieldValues(prev => ({ 
+      ...prev, 
+      [fieldName]: user[fieldName] || '' 
     }));
     setEditingField(null);
     if (fieldName === 'phone') {
@@ -163,17 +162,17 @@ const ProfilePage = () => {
     const newValue = !fieldValues[fieldName];
     setFieldValues(prev => ({ ...prev, [fieldName]: newValue }));
     setSavingField(fieldName);
-   
+    
     try {
       const updateData = { [fieldName]: newValue };
       const resultAction = await dispatch(updateUserProfile(updateData));
-     
+      
       if (updateUserProfile.fulfilled.match(resultAction)) {
         const updatedUser = { ...user, [fieldName]: newValue };
         localStorage.setItem('user', JSON.stringify(updatedUser));
-       
+        
         await dispatch(fetchUserProfile());
-        addToast(Account ${newValue ? 'activated' : 'deactivated'} successfully!, 'success');
+        addToast(`Account ${newValue ? 'activated' : 'deactivated'} successfully!`, 'success');
       } else {
         setFieldValues(prev => ({ ...prev, [fieldName]: !newValue }));
         addToast('Failed to update status. Please try again.', 'error');
@@ -188,7 +187,7 @@ const ProfilePage = () => {
 
   if (loading && !user) {
     return (
-      <div
+      <div 
         className="min-h-screen flex items-center justify-center"
         style={{ backgroundColor: "var(--color-bg)" }}
       >
@@ -202,7 +201,7 @@ const ProfilePage = () => {
 
   if (!loading && !user) {
     return (
-      <div
+      <div 
         className="min-h-screen flex items-center justify-center"
         style={{ backgroundColor: "var(--color-bg)" }}
       >
@@ -218,39 +217,29 @@ const ProfilePage = () => {
   }
 
   return (
-    <div
+    <div 
       className="min-h-screen"
       style={{ backgroundColor: "var(--color-bg)" }}
     >
    
    {/* Header */}
-      <div
+      <div 
         className="border-b sticky top-0 z-10 backdrop-blur-sm"
-        style={{
-          backgroundColor: "var(--color-bg)",
-          borderColor: "var(--color-bg)"
+        style={{ 
+          backgroundColor: "var(--color-bg)", 
+          borderColor: "var(--color-bg)" 
         }}
       >
         <div className="max-w-6xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-             <div className="p-4 bg-slate-800 border border-slate-700 rounded-xl shadow-lg">
-                    <User className="h-8 w-8 text-blue-400" />
-                  </div>
-              <div>
-                <h1
-                  className="text-4xl font-bold"
-                  style={{ color: "var(--color-fg)" }}
-                >
-                  Profile Settings
-                </h1>
-                <p
-                  className="text-sm"
-                  style={{ color: "var(--color-muted)" }}
-                >
-                  Manage your account information and preferences
-                </p>
-              </div>
+               <PageHeader
+        icon={User}
+        title="User Management"
+        subtitle="Manage user accounts, roles, and permissions"
+        isAdmin={false}
+        error="Failed to load users."
+      />
             </div>
           </div>
         </div>
@@ -261,28 +250,31 @@ const ProfilePage = () => {
       <div className="max-w-6xl mx-auto px-6 py-8">
         <div className="space-y-8">
           {/* Personal Information Section */}
-          <div
-            className="rounded-2xl border p-8"
-            style={{
-              backgroundColor: "var(--color-card)",
-              borderColor: "var(--color-border)"
+          <div 
+            className="rounded-2xl border p-8 overflow-hidden shadow-xl"
+            style={{ 
+              backgroundColor: "var(-color-subtle-bg)", 
+               border: "1px solid var(--color-border)",
             }}
           >
             <div className="flex items-center gap-3 mb-8">
-              <div
+              <div 
                 className="p-2 rounded-lg"
-                style={{ backgroundColor: "var(--color-primary-bg)" }}
+               style={{
+                        backgroundColor: "var(--color-subtle-bg)",
+                        border: "1px solid var(--color-border)",
+                      }}
               >
                 <User size={20} style={{ color: "var(--color-primary)" }} />
               </div>
               <div>
-                <h2
+                <h2 
                   className="text-xl font-semibold"
                   style={{ color: "var(--color-fg)" }}
                 >
                   Personal Information
                 </h2>
-                <p
+                <p 
                   className="text-sm"
                   style={{ color: "var(--color-muted)" }}
                 >
@@ -351,28 +343,31 @@ const ProfilePage = () => {
           </div>
 
           {/* Account Settings Section */}
-          <div
-            className="rounded-2xl border p-8"
-            style={{
-              backgroundColor: "var(--color-card)",
-              borderColor: "var(--color-border)"
+          <div 
+            className="rounded-2xl border p-8 overflow-hidden shadow-xl"
+            style={{ 
+              backgroundColor: "var(-color-subtle-bg)", 
+              borderColor: "var(--color-border)" 
             }}
           >
             <div className="flex items-center gap-3 mb-8">
-              <div
+              <div 
                 className="p-2 rounded-lg"
-                style={{ backgroundColor: "var(--color-primary-bg)" }}
+               style={{
+                        backgroundColor: "var(--color-subtle-bg)",
+                        border: "1px solid var(--color-border)",
+                      }}
               >
                 <Settings size={20} style={{ color: "var(--color-primary)" }} />
               </div>
               <div>
-                <h2
+                <h2 
                   className="text-xl font-semibold"
                   style={{ color: "var(--color-fg)" }}
                 >
                   Account Settings
                 </h2>
-                <p
+                <p 
                   className="text-sm"
                   style={{ color: "var(--color-muted)" }}
                 >
@@ -414,28 +409,33 @@ const ProfilePage = () => {
           </div>
 
           {/* Company Information Section */}
-          <div
-            className="rounded-2xl border p-8"
-            style={{
-              backgroundColor: "var(--color-card)",
-              borderColor: "var(--color-border)"
+          <div 
+            className="rounded-2xl border p-8 overflow-hidden shadow-xl"
+            style={{ 
+              backgroundColor: "var(--color-subtle-bg)", 
+              borderColor: "var(--color-border)" ,
+               border: "1px solid var(--color-border)",
             }}
           >
-            <div className="flex items-center gap-3 mb-8">
-              <div
+            <div className="flex items-center gap-3 mb-8"
+            >
+              <div 
                 className="p-2 rounded-lg"
-                style={{ backgroundColor: "var(--color-primary-bg)" }}
+                style={{
+                        backgroundColor: "var(--color-subtle-bg)",
+                        border: "1px solid var(--color-border)",
+                      }}
               >
                 <Briefcase size={20} style={{ color: "var(--color-primary)" }} />
               </div>
               <div>
-                <h2
+                <h2 
                   className="text-xl font-semibold"
                   style={{ color: "var(--color-fg)" }}
                 >
                   Company Information
                 </h2>
-                <p
+                <p 
                   className="text-sm"
                   style={{ color: "var(--color-muted)" }}
                 >
@@ -487,5 +487,3 @@ const ProfilePage = () => {
     </div>
   );
 };
-
-export default ProfilePage;
