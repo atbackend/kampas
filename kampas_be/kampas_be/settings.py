@@ -16,6 +16,8 @@ import os
 import sys
 from pathlib import Path
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 # Decide which env file to load based on DJANGO_ENV
 DJANGO_ENV = os.getenv("DJANGO_ENV", "development")
 
@@ -43,7 +45,7 @@ if 'conda' in sys.prefix or 'miniconda' in sys.prefix:
     os.environ['CPL_LOG'] = os.getenv('CPL_LOG', 'NUL' if os.name == 'nt' else '/dev/null')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+# BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 
