@@ -1,19 +1,3 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchUserProfile, updateUserProfile, clearError } from '../redux/authSlice';
-import { 
-  User, Mail, Phone, Building, Shield, CheckCircle, XCircle, 
-  Check, X, Settings, Briefcase, UserCheck, Crown, Activity 
-} from 'lucide-react';
-
-import { LoadingSpinner } from '../components/commons/LoadingSpinner.jsx';
-import { Button } from '../components/commons/Button.jsx';
-import { ErrorMessage } from '../components/commons/ErrorMessage.jsx';
-import { EditableField } from '../components/commons/EditablefIeld.jsx';
-import { useToast } from '../components/commons/SuccessMessages.jsx';
-import { PageHeader } from './PageHeader.jsx';
-
-
 const ProfilePage = () => {
   const dispatch = useDispatch();
   const { user, loading, error } = useSelector((state) => state.auth);
@@ -487,3 +471,5 @@ const ProfilePage = () => {
     </div>
   );
 };
+
+export default ProfilePage;
