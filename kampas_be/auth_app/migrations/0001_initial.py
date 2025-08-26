@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                 ('is_superuser', models.BooleanField(default=False, help_text='Designates that this user has all permissions without explicitly assigning them.', verbose_name='superuser status')),
                 ('is_staff', models.BooleanField(default=False, help_text='Designates whether the user can log into this admin site.', verbose_name='staff status')),
                 ('date_joined', models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')),
-                ('id', models.CharField(default=auth_app.models.generate_unique_id, editable=False, max_length=25, primary_key=True, serialize=False)),
+                ('id', models.CharField(default=kampas_be.auth_app.models.generate_unique_id, editable=False, max_length=25, primary_key=True, serialize=False)),
                 ('email', models.EmailField(max_length=254, unique=True)),
                 ('first_name', models.CharField(max_length=30)),
                 ('last_name', models.CharField(max_length=30)),
@@ -45,7 +45,7 @@ class Migration(migrations.Migration):
                 'abstract': False,
             },
             managers=[
-                ('objects', auth_app.models.CustomUserManager()),
+                ('objects', kampas_be.auth_app.models.CustomUserManager()),
             ],
         ),
     ]
