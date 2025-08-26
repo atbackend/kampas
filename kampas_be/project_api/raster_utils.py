@@ -9,8 +9,8 @@ import rasterio
 from rasterio.warp import transform_bounds
 from django.conf import settings
 from django.utils import timezone
-from project_api.models import RasterLayer, Project
-from project_api.geoserver_utils import get_geoserver_manager
+from kampas_be.project_api.models import RasterLayer, Project
+from kampas_be.project_api.geoserver_utils import get_geoserver_manager
 
 logger = logging.getLogger(__name__)
 
