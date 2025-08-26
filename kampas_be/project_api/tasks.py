@@ -4,15 +4,15 @@ from celery import shared_task
 from celery.exceptions import SoftTimeLimitExceeded
 from django.conf import settings
 from django.utils import timezone
-from project_api.geoserver_utils import StreetImageryLayerManager
-from project_api.models import RasterLayer, Project, VectorLayer, TerrainModel
+from kampas_be.project_api.geoserver_utils import StreetImageryLayerManager
+from kampas_be.project_api.models import RasterLayer, Project, VectorLayer, TerrainModel
 from django.contrib.auth import get_user_model
-from project_api.file_upload_utils import FileUploadProcessor
+from kampas_be.project_api.file_upload_utils import FileUploadProcessor
 import time
-from project_api.vector_utils import VectorDataProcessor
-from project_api.raster_utils import RasterDataProcessor
-from project_api.geoserver_utils import GeoServerManager
-from project_api.terrain_utils import TerrainDataProcessor
+from kampas_be.project_api.vector_utils import VectorDataProcessor
+from kampas_be.project_api.raster_utils import RasterDataProcessor
+from kampas_be.project_api.geoserver_utils import GeoServerManager
+from kampas_be.project_api.terrain_utils import TerrainDataProcessor
 
 
 logger = logging.getLogger(__name__)
