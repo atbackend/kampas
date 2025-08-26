@@ -16,17 +16,9 @@ import os
 import sys
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Decide which env file to load based on DJANGO_ENV
-DJANGO_ENV = os.getenv("DJANGO_ENV", "development")
-
-if DJANGO_ENV == "production":
-    load_dotenv(BASE_DIR / ".env.prod")
-elif DJANGO_ENV == "development":
-    load_dotenv(BASE_DIR / ".env.dev")
-else:
-    load_dotenv(BASE_DIR / ".env")  # fallback
+env_file = ".env.prod" if os.getenv("DJANGO_ENV") == "production" else ".env.dev"
+load_dotenv(env_file)
 
 # GDAL Configuration for Conda Environment
 if 'conda' in sys.prefix or 'miniconda' in sys.prefix:
@@ -45,7 +37,7 @@ if 'conda' in sys.prefix or 'miniconda' in sys.prefix:
     os.environ['CPL_LOG'] = os.getenv('CPL_LOG', 'NUL' if os.name == 'nt' else '/dev/null')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-# BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 
@@ -53,7 +45,7 @@ TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = 'django-insecure-(*+1z^dofk#q-jk8n5g@xu+fvd#pmcl!)pnkphk12s@na+pfqg'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
