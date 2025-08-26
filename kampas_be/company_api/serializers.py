@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Company, Client
-from auth_app.models import CustomUser
+from kampas_be.auth_app.models import CustomUser
 
 # -----------------------------------------------------------------------------
 # CompanySerializer handles serialization and validation for the Company model.
