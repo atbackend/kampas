@@ -4,7 +4,7 @@ import { logout, refreshTokenSuccess } from '../redux/authSlice';
 import { getStore } from "../redux/storeInjector";
 import { isTokenExpired } from '../utils/tokenUtils';
 
-const API_URL = "http://localhost:8000";
+const API_URL = 'http://ec2-65-0-97-169.ap-south-1.compute.amazonaws.com';
 
 const axiosInstance = axios.create({
   baseURL: '',
